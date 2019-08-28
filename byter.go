@@ -8,7 +8,7 @@ import (
 type Buffer struct {
 	io.Writer
 	*sync.Mutex
-	written uint64
+	written int
 }
 
 func New(w io.Writer) *Buffer {
@@ -24,12 +24,12 @@ func (b *Buffer) WriteString(s string) (n int, err error) {
 		return
 	}
 
-	b.written += uint64(n)
+	b.written += n
 
 	return
 }
 
-func (b *Buffer) Len() uint64 {
+func (b *Buffer) Len() int {
 	b.Mutex.Lock()
 	defer b.Mutex.Unlock()
 
