@@ -2,6 +2,8 @@ package byter
 
 import (
 	"bytes"
+	"io/ioutil"
+	"os"
 	"testing"
 )
 
@@ -10,6 +12,23 @@ func TestBuffer_Memory(t *testing.T) {
 
 	buf := New(store)
 
+	test(buf, t)
+}
+
+func TestBuffer_File(t *testing.T) {
+
+	store, err := ioutil.TempFile("", "testfile")
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer os.Remove(store.Name())
+
+	buf := New(store)
+
+	test(buf, t)
+}
+
+func test(buf *Buffer, t *testing.T) {
 	if buf.Len() != 0 {
 		t.Errorf("expected a newly created buffer to have 0 length, got %d\n", buf.Len())
 	}
