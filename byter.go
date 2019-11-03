@@ -20,11 +20,14 @@ func (b *Buffer) WriteString(s string) (n int, err error) {
 	defer b.Mutex.Unlock()
 
 	n, err = io.WriteString(b.Writer, s)
+	// even in case of an error some bytes,
+	// maybe none,
+	// has the chance to be written
+	b.written += n
+
 	if err != nil {
 		return
 	}
-
-	b.written += n
 
 	return
 }
